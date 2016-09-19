@@ -1,0 +1,164 @@
+<config_plugin>
+    <docstructs>
+        <docstruct actapro="Allgemeines Schriftgut" ruleset="Manuscript" />
+        <docstruct actapro="Bild / Foto" ruleset="Picture" />
+        <docstruct actapro="Handschrift" ruleset="Manuscript" />
+        <docstruct actapro="Personenbezogene Akte" ruleset="Record" />
+        <docstruct actapro="Objekt" ruleset="Fragment" />
+    </docstructs>
+    <metadata>
+<!-- Titel -->
+        <element xpath="./h1:Block/h1:Field[@Type='St_Titel']/@value_plain" metadata="TitleDocMain" />
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Bez_Compound']/@Value" metadata="TitleDocMain" />
+        <element xpath="./h1:Block/h1:Field[@Type='Obj_Titel']/@Value" metadata="TitleDocMain" />
+        <element xpath="./h1:Block/h1:Field[@Type='hs_Titel']/@value_plain" metadata="TitleDocMain" />
+<!--     Laufzeit -->
+        <element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@Value" metadata="PublicationRun" />
+
+<!-- Bestellsignatur -->
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Bestellsignatur']/@Value" metadata="shelfmarksource" />
+
+<!-- Enthält -->
+        <element xpath="./h1:Block/h1:Field[@Type='St_Entha']/@value_plain" metadata="Contains" />
+
+<!-- Umfang -->
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Umfang']/@Value" metadata="FormatSourcePrint" />
+
+<!-- Archivkürzel, does not need a mapping, gets always added
+        <element xpath="./h1:Block/h1:Field[@Type='Wasserzeichen']/@Value" metadata="ArchiveName" />
+-->
+
+<!-- Benutzungsbeschrängungen -->
+        <element xpath="./h1:Block/h1:Field[@Type='Sperr_Unbestellbar_Bis']/@Value" metadata="PublicReleaseYear" />
+
+<!-- Ortsangaben -->
+
+        <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp'][h1:Field[@Type='Ortsangaben_Erlaeuterung'][@Value='Enstehungsort']]/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="PlaceOfPublication" />
+
+<!-- <element xpath="//h1:Block/h1:Field[@Type='Ortsangaben_Gp'][h1:Field[@Type='Ortsangaben_Erlaeuterung'][@Value='Wirkungsort']]/h1:Field[@Type='Ortsangaben_Ort']/@Value"  metadata="PlaceOfPublication" /> -->
+
+<!-- Bemerkung -->
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Bemer']/@Value" metadata="Footnote" />
+
+
+
+<!-- Material -->
+
+        <element xpath="./h1:Block/h1:Field[@Type='BI_Materialtyp_Gp']/h1:Field[@Type='Bi_Materialtyp_Format']/@Value" metadata="Material" />
+        <element xpath="./h1:Block/h1:Field[@Type='Obj_Material']/@Value" metadata="Material" />
+
+
+<!-- Beschreibung -->
+
+        <element xpath="./h1:Block/h1:Field[@Type='Obj_Beschreibung']/@Value" metadata="Description" />
+        <element xpath="./h1:Block/h1:Field[@Type='hs_Formalbeschreibung']/@value_plain" metadata="Description" />
+
+<!-- Größe -->
+
+        <element xpath="./h1:Block/h1:Field[@Type='Obj_Groesse']/@Value" metadata="SizeSourcePrint" />
+
+<!-- Inhalt -->
+        <element xpath="./h1:Block/h1:Field[@Type='hs_Inhalt']/@Value" metadata="Content" />
+    </metadata>
+
+<!--
+Bst_Signatur
+Bst_Name
+-->
+<!--
+Vz_OwnSign
+ <h1:Field Type="Vz_OwnSign" Value="120"/>
+
+Vz_Sign1
+      <h1:Field Type="Vz_Sign1" Value="184612"/>
+Export_id
+<h1:Field Type="Export_id" Value="Vz_9929832A-E8BF-40C9-8239-F2A267E85E71"/>
+
+ -->
+
+    <person>
+        <element xpath="./h1:Block/h1:Field[@Type='Pa_Nachname']" metadata="Author">
+            <firstname xpath="../h1:Field[@Type='Pa_Vorname']/@Value" />
+            <lastname xpath="./@Value" />
+            <identifier xpath="../h1:Field[@Type='PA_GND']/@Value" />
+        </element>
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Urh.']]" metadata="CreatorCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Urh.']]" metadata="Creator">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Schreiber']]" metadata="AuthorCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Schreiber']]" metadata="Author">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Adressat']]" metadata="AddresseeCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Adressat']]" metadata="Addressee">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Empfänger']]" metadata="AddresseeCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Empfänger']]" metadata="Addressee">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Schreiber']]" metadata="WriterCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Schreiber']]" metadata="Writer">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Portrait']]" metadata="PicturedCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Portrait']]" metadata="PicturedPerson">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Lebensdokument']]" metadata="PicturedCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Lebensdokument']]" metadata="PicturedPerson">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Künstler']]" metadata="ArtistCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Künstler']]" metadata="IllustratorArtist">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Vorbesitzer']]" metadata="AncestorCorporate">
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][h1:Field[@Type='Beteiligte_Personen_Vorname']][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Vorbesitzer']]" metadata="Ancestor">
+            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
+            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
+        </element>
+
+    </person>
+
+</config_plugin>
