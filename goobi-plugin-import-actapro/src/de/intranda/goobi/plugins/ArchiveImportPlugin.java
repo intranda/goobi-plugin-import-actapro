@@ -68,7 +68,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     private String importFolder = "";
 
     private Prefs prefs;
-    private MassImportForm form;
+    private MassImportForm form = null;
 
     private Map<String, String> docstructMap;
 
@@ -76,7 +76,11 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     private Map<String, Map<String, String>> personMap;
 
-    private Record record;
+    private String currentIdentifier;
+
+    //    private Record record;
+
+    private Element document;
 
     public ArchiveImportPlugin() {
 
@@ -108,15 +112,15 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     @Override
     public void setData(Record r) {
-        record = r;
+        //        record = r;
     }
 
     @Override
     public Fileformat convertData() throws ImportPluginException {
-
+       
         log.info("*******************");
-        log.info("importing record " + record.getId());
-        Element document = (Element) record.getObject();
+        log.info("importing record " + currentIdentifier);
+
         Element text = documentType.evaluateFirst(document);
         String documentType = text.getAttributeValue("Value");
         log.info("document type in xml file is " + documentType);
@@ -141,7 +145,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             Metadata identifier = new Metadata(prefs.getMetadataTypeByName("CatalogIDDigital"));
             identifier.setValue(getProcessTitle());
             logical.addMetadata(identifier);
-            
+
             Metadata imagePath = new Metadata(prefs.getMetadataTypeByName("pathimagefiles"));
             imagePath.setValue("./images/");
             physical.addMetadata(imagePath);
@@ -195,13 +199,14 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
                         }
                     }
 
-                    log.info("Importing person " +metadataType + " with lastname " + lastnameValue);
-                    
+                    log.info("Importing person " + metadataType + " with lastname " + lastnameValue);
+
                     Person person = new Person(prefs.getMetadataTypeByName(metadataType));
                     person.setLastname(lastnameValue);
                     if (firstnameValue != null) {
                         person.setFirstname(firstnameValue);
-                    }if (gndValue != null) {
+                    }
+                    if (gndValue != null) {
                         person.setAutorityFile("GND", "http://d-nb.info/gnd/", gndValue);
                     }
                     logical.addPerson(person);
@@ -213,11 +218,11 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
             archiveName.setValue("Archiv für Bildungsgeschichtliche Forschung");
             logical.addMetadata(archiveName);
-            
+
             Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
             archiveAbbreviation.setValue("DIPF/BBF/Archiv");
             logical.addMetadata(archiveAbbreviation);
-            
+
             // TODO: Sammlung?
             Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
             collection.setValue("Georg-Herwegh-Oberschule#Prüfungen");
@@ -237,7 +242,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     @Override
     public String getProcessTitle() {
-        return record.getId().replaceAll(" ", "_");
+        return currentIdentifier.replaceAll(" ", "_");
     }
 
     @Override
@@ -245,26 +250,56 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         List<ImportObject> convertedList = new LinkedList<>();
 
         for (Record record : records) {
-            ImportObject io = new ImportObject();
-            convertedList.add(io);
-            this.record = record;
-            form.addProcessToProgressBar();
+            if (form != null) {
+                form.addProcessToProgressBar();
+            }
+
+            SAXBuilder builder = new SAXBuilder();
             try {
-                Fileformat ff = convertData();
-                String fileName = getImportFolder() + File.separator + getProcessTitle() + ".xml";
-                
-                ff.write(fileName);
-                
-                io.setProcessTitle(getProcessTitle());
-                io.setMetsFilename(fileName);
-                io.setImportReturnValue(ImportReturnValue.ExportFinished);
-                
-            } catch (ImportPluginException | WriteException | PreferencesException e) {
+                Document root = builder.build(new File(record.getData()));
+                Element documentSet = root.getRootElement();
+
+                if (documentSet.getName().equals("Document")) {
+                    this.document = documentSet;
+                    ImportObject io = runConversion();
+                    convertedList.add(io);
+                } else {
+                    List<Element> documentList = documentSet.getChildren("Document", h1);
+
+                    for (Element document : documentList) {
+                        this.document = document;
+                        ImportObject io = runConversion();
+                        convertedList.add(io);
+                    }
+                }
+            } catch (JDOMException | IOException e) {
                 log.error(e);
             }
+
         }
 
         return convertedList;
+    }
+
+    public ImportObject runConversion() {
+        currentIdentifier = document.getAttributeValue("DocKey");
+        ImportObject io = new ImportObject();
+
+        try {
+            Fileformat ff = convertData();
+            String fileName = getImportFolder() + File.separator + getProcessTitle() + ".xml";
+
+            ff.write(fileName);
+
+            io.setProcessTitle(getProcessTitle());
+            io.setMetsFilename(fileName);
+            io.setImportReturnValue(ImportReturnValue.ExportFinished);
+
+        } catch (ImportPluginException | WriteException | PreferencesException e) {
+            log.error(e);
+        }
+        return io;
+
     }
 
     @Override
@@ -293,38 +328,14 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         List<Record> recordList = new LinkedList<>();
         for (String filename : selectedFilenames) {
 
-            SAXBuilder builder = new SAXBuilder();
-            try {
-                Document root = builder.build(new File(SOURCE_FOLDER + filename));
-                Element documentSet = root.getRootElement();
-
-                if (documentSet.getName().equals("Document")) {
-                    Record record = createRecord(documentSet);
-                    recordList.add(record);
-                } else {
-                    List<Element> documentList = documentSet.getChildren("Document", h1);
-
-                    for (Element document : documentList) {
-                        Record record = createRecord(document);
-                        recordList.add(record);
-                    }
-                }
-            } catch (JDOMException | IOException e) {
-                log.error(e);
-            }
-
+            Record record = new Record();
+            record.setId("filename");
+            record.setData(SOURCE_FOLDER + filename);
+            recordList.add(record);
         }
         return recordList;
     }
 
-    private Record createRecord(Element document) {
-        Record record = new Record();
-        String identifier = document.getAttributeValue("DocKey");
-        record.setId(identifier);
-        record.setData(identifier);
-        record.setObject(document);
-        return record;
-    }
 
     @Override
     public void setFile(File importFile) {
@@ -385,6 +396,11 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     @Override
     public void setDocstruct(DocstructElement dse) {
+    }
+
+    
+    public String getDescription() {
+        return null;
     }
 
 }
