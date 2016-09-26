@@ -223,7 +223,6 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             archiveAbbreviation.setValue("DIPF/BBF/Archiv");
             logical.addMetadata(archiveAbbreviation);
 
-            // TODO: Sammlung?
             Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
             collection.setValue("Georg-Herwegh-Oberschule#Prüfungen");
             logical.addMetadata(collection);
