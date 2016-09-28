@@ -24,7 +24,7 @@
 <!-- Umfang -->
         <element xpath="./h1:Block/h1:Field[@Type='Vz_Umfang']/@Value" metadata="FormatSourcePrint" />
 
-<!-- Archivkürzel, does not need a mapping, gets always added
+<!-- Archivkürzel, wird automatisch hinzugefügt, kein Mapping nötig
         <element xpath="./h1:Block/h1:Field[@Type='Wasserzeichen']/@Value" metadata="ArchiveName" />
 -->
 
