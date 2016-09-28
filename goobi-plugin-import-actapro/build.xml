@@ -171,7 +171,7 @@
 
     <!-- Run all targets in appropiate order for clean compile-->
     <target name="dist" depends="clean, createDirs, git.revision, jar.runnable" description="Creating everything for Jenkins.">
-        <copy tofile="${dir.deploy}/config_actaproMetadataMapping.xml" file="config_actaproMetadataMapping" overwrite="true" />
+        <copy tofile="${dir.deploy}/config_actaproMetadataMapping.xml" file="config_actaproMetadataMapping.xml" overwrite="true" />
     </target>
 
     <!-- ================================= 
