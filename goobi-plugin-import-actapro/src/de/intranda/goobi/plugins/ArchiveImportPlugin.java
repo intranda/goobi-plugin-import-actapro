@@ -34,8 +34,10 @@ import ugh.dl.Metadata;
 import ugh.dl.MetadataType;
 import ugh.dl.Person;
 import ugh.dl.Prefs;
+import ugh.exceptions.DocStructHasNoTypeException;
 import ugh.exceptions.MetadataTypeNotAllowedException;
 import ugh.exceptions.PreferencesException;
+import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 import ugh.fileformats.mets.MetsMods;
@@ -62,7 +64,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             .attribute(), null, h1);
 
     private static final String PLUGIN_NAME = "intranda_ArchiveDocumentImport";
-    // TODO anpassen
+
     private static final String SOURCE_FOLDER = "/opt/digiverso/goobi/import/dipf/";
 
     private String importFolder = "";
@@ -80,7 +82,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     //    private Record record;
 
-    private Element document;
+    private List<Element> documentList;
 
     public ArchiveImportPlugin() {
 
@@ -117,15 +119,17 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     @Override
     public Fileformat convertData() throws ImportPluginException {
-       
+        Element document = documentList.get(0);
         log.info("*******************");
-        log.info("importing record " + currentIdentifier);
 
-        Element text = documentType.evaluateFirst(document);
+        Element text = ArchiveImportPlugin.documentType.evaluateFirst(document);
         String documentType = text.getAttributeValue("Value");
         log.info("document type in xml file is " + documentType);
 
         String rulesetType = docstructMap.get(documentType);
+        currentIdentifier = document.getAttributeValue("DocKey");
+
+        log.info("importing record " + currentIdentifier);
 
         log.info("ruleset type is " + rulesetType);
         MetsMods mm = null;
@@ -141,66 +145,107 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             DocStructType physicalType = prefs.getDocStrctTypeByName("BoundBook");
             DocStruct physical = digitalDocument.createDocStruct(physicalType);
             digitalDocument.setPhysicalDocStruct(physical);
+            Metadata imagePath = new Metadata(prefs.getMetadataTypeByName("pathimagefiles"));
+            imagePath.setValue("./images/");
+            physical.addMetadata(imagePath);
 
             Metadata identifier = new Metadata(prefs.getMetadataTypeByName("CatalogIDDigital"));
             identifier.setValue(getProcessTitle());
             logical.addMetadata(identifier);
 
-            Metadata imagePath = new Metadata(prefs.getMetadataTypeByName("pathimagefiles"));
-            imagePath.setValue("./images/");
-            physical.addMetadata(imagePath);
-            for (String xpath : metadataMap.keySet()) {
-                attributeType = xFactory.compile(xpath, Filters.attribute(), null, h1);
-                List<Attribute> attrList = attributeType.evaluate(document);
-                for (Attribute attr : attrList) {
+            extractMetadata(document, logical);
 
-                    String value = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
-                    MetadataType mdt = prefs.getMetadataTypeByName(metadataMap.get(xpath));
-                    Metadata md = new Metadata(mdt);
-                    md.setValue(value);
-                    logical.addMetadata(md);
-                    log.info("Importing " + mdt.getName() + " with value " + value);
+            if (documentList.size() > 1) {
+                for (Element element : documentList) {
+
+                    //                    Element textElement = ArchiveImportPlugin.documentType.evaluateFirst(element);
+                    String identifierText = element.getAttributeValue("DocKey");
+                    if (identifierText.startsWith("Vor")) {
+                        //                        String docstructName = textElement.getAttributeValue("Value");
+                        //                        String docstructType = docstructMap.get(docstructName);
+
+                        DocStructType dst = prefs.getDocStrctTypeByName("Dossier");
+                        DocStruct docstruct = digitalDocument.createDocStruct(dst);
+
+                        Metadata dosierIdentifier = new Metadata(prefs.getMetadataTypeByName("CatalogIDDigital"));
+                        dosierIdentifier.setValue(identifierText.replace(" ", "_"));
+                        docstruct.addMetadata(dosierIdentifier);
+
+                        logical.addChild(docstruct);
+
+                        extractMetadata(document, docstruct);
+                    }
                 }
             }
 
-            for (String xpath : personMap.keySet()) {
-                elementType = xFactory.compile(xpath, Filters.element(), null, h1);
-                List<Element> list = elementType.evaluate(document);
-                for (Element element : list) {
-                    Map<String, String> personConfiguration = personMap.get(xpath);
+        } catch (PreferencesException | MetadataTypeNotAllowedException | TypeNotAllowedForParentException | TypeNotAllowedAsChildException e) {
+            throw new ImportPluginException(e);
+        }
 
-                    String metadataType = personConfiguration.get(Mapping.METADATA);
-                    String lastnameValue = null;
-                    String firstnameValue = null;
-                    String gndValue = null;
+        return mm;
+    }
 
-                    String lastnameXpath = personConfiguration.get(Mapping.LASTNAME);
-                    attributeType = xFactory.compile(lastnameXpath, Filters.attribute(), null, h1);
-                    List<Attribute> attrList = attributeType.evaluate(element);
+    private void extractMetadata(Element document, DocStruct logical) {
+
+        for (String xpath : metadataMap.keySet()) {
+            attributeType = xFactory.compile(xpath, Filters.attribute(), null, h1);
+            List<Attribute> attrList = attributeType.evaluate(document);
+            for (Attribute attr : attrList) {
+
+                String value = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
+                MetadataType mdt = prefs.getMetadataTypeByName(metadataMap.get(xpath));
+                Metadata md;
+                try {
+                    md = new Metadata(mdt);
+
+                    md.setValue(value);
+                    logical.addMetadata(md);
+                    log.info("Importing " + mdt.getName() + " with value " + value);
+                } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
+                    log.error("Cannot add metadata " + mdt.getName() + " to docstruct " + logical.getType().getName());
+                }
+            }
+        }
+
+        for (String xpath : personMap.keySet()) {
+            elementType = xFactory.compile(xpath, Filters.element(), null, h1);
+            List<Element> list = elementType.evaluate(document);
+            for (Element element : list) {
+                Map<String, String> personConfiguration = personMap.get(xpath);
+
+                String metadataType = personConfiguration.get(Mapping.METADATA);
+                String lastnameValue = null;
+                String firstnameValue = null;
+                String gndValue = null;
+
+                String lastnameXpath = personConfiguration.get(Mapping.LASTNAME);
+                attributeType = xFactory.compile(lastnameXpath, Filters.attribute(), null, h1);
+                List<Attribute> attrList = attributeType.evaluate(element);
+                for (Attribute attr : attrList) {
+                    lastnameValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
+                }
+
+                String firstnameXpath = personConfiguration.get(Mapping.FIRSTNAME);
+                if (StringUtils.isNotBlank(firstnameXpath)) {
+                    attributeType = xFactory.compile(firstnameXpath, Filters.attribute(), null, h1);
+                    attrList = attributeType.evaluate(element);
                     for (Attribute attr : attrList) {
-                        lastnameValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
+                        firstnameValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
                     }
+                }
 
-                    String firstnameXpath = personConfiguration.get(Mapping.FIRSTNAME);
-                    if (StringUtils.isNotBlank(firstnameXpath)) {
-                        attributeType = xFactory.compile(firstnameXpath, Filters.attribute(), null, h1);
-                        attrList = attributeType.evaluate(element);
-                        for (Attribute attr : attrList) {
-                            firstnameValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
-                        }
+                String identifierXpath = personConfiguration.get(Mapping.IDENTIFIER);
+                if (StringUtils.isNotBlank(identifierXpath)) {
+                    attributeType = xFactory.compile(identifierXpath, Filters.attribute(), null, h1);
+                    attrList = attributeType.evaluate(element);
+                    for (Attribute attr : attrList) {
+                        gndValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
                     }
+                }
 
-                    String identifierXpath = personConfiguration.get(Mapping.IDENTIFIER);
-                    if (StringUtils.isNotBlank(identifierXpath)) {
-                        attributeType = xFactory.compile(identifierXpath, Filters.attribute(), null, h1);
-                        attrList = attributeType.evaluate(element);
-                        for (Attribute attr : attrList) {
-                            gndValue = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
-                        }
-                    }
+                log.info("Importing person " + metadataType + " with lastname " + lastnameValue);
 
-                    log.info("Importing person " + metadataType + " with lastname " + lastnameValue);
-
+                try {
                     Person person = new Person(prefs.getMetadataTypeByName(metadataType));
                     person.setLastname(lastnameValue);
                     if (firstnameValue != null) {
@@ -210,11 +255,14 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
                         person.setAutorityFile("GND", "http://d-nb.info/gnd/", gndValue);
                     }
                     logical.addPerson(person);
+                } catch (MetadataTypeNotAllowedException e) {
+                    log.error(e);
                 }
-
             }
-            // statische Metadaten
 
+        }
+        // statische Metadaten
+        try {
             Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
             archiveName.setValue("Archiv für Bildungsgeschichtliche Forschung");
             logical.addMetadata(archiveName);
@@ -226,12 +274,9 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
             collection.setValue("Georg-Herwegh-Oberschule#Prüfungen");
             logical.addMetadata(collection);
-
-        } catch (PreferencesException | MetadataTypeNotAllowedException | TypeNotAllowedForParentException e) {
-            throw new ImportPluginException(e);
+        } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
+            log.error(e);
         }
-
-        return mm;
     }
 
     @Override
@@ -259,17 +304,17 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
                 Element documentSet = root.getRootElement();
 
                 if (documentSet.getName().equals("Document")) {
-                    this.document = documentSet;
+                    this.documentList = new ArrayList<>();
+                    documentList.add(documentSet);
                     ImportObject io = runConversion();
                     convertedList.add(io);
                 } else {
                     List<Element> documentList = documentSet.getChildren("Document", h1);
+                    this.documentList = documentList;
 
-                    for (Element document : documentList) {
-                        this.document = document;
-                        ImportObject io = runConversion();
-                        convertedList.add(io);
-                    }
+                    ImportObject io = runConversion();
+                    convertedList.add(io);
+
                 }
             } catch (JDOMException | IOException e) {
                 log.error(e);
@@ -281,7 +326,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     }
 
     public ImportObject runConversion() {
-        currentIdentifier = document.getAttributeValue("DocKey");
+
         ImportObject io = new ImportObject();
 
         try {
@@ -334,7 +379,6 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         }
         return recordList;
     }
-
 
     @Override
     public void setFile(File importFile) {
@@ -397,7 +441,6 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     public void setDocstruct(DocstructElement dse) {
     }
 
-    
     public String getDescription() {
         return null;
     }
