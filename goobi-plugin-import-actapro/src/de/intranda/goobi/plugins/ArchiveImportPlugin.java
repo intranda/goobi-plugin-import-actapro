@@ -173,7 +173,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
                         logical.addChild(docstruct);
 
-                        extractMetadata(document, docstruct);
+                        extractMetadata(element, docstruct);
                     }
                 }
             }
