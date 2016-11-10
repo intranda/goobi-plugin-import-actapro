@@ -65,7 +65,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     private static final String PLUGIN_NAME = "intranda_ArchiveDocumentImport";
 
-    private static final String SOURCE_FOLDER = "/opt/digiverso/goobi/import/dipf/";
+    private static final String SOURCE_FOLDER = "/opt/digiverso/goobi/import/BBFArchiv/";
 
     private String importFolder = "";
 
