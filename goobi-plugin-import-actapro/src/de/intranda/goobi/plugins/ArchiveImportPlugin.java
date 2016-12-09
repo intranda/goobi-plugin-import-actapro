@@ -264,7 +264,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         // statische Metadaten
         try {
             Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
-            archiveName.setValue("Archiv für Bildungsgeschichtliche Forschung");
+            archiveName.setValue("Archiv der Bibliothek für Bildungsgeschichtliche Forschung (BBF) des Deutschen Instituts für Internationale Paedagogische Forschung (DIPF)");
             logical.addMetadata(archiveName);
 
             Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
