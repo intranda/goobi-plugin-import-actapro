@@ -2,6 +2,9 @@ package de.intranda.goobi.plugins;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -409,7 +412,14 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     @Override
     public void deleteFiles(List<String> selectedFilenames) {
-        // TODO Auto-generated method stub
+        for (String filename : selectedFilenames) {
+            Path file = Paths.get(SOURCE_FOLDER, filename);
+            try {
+                Files.delete(file);
+            } catch (IOException e) {
+                log.error(e);
+            }
+        }
     }
 
     @Override
