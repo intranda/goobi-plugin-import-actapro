@@ -275,7 +275,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             logical.addMetadata(archiveAbbreviation);
 
             Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
-            collection.setValue("Georg-Herwegh-Oberschule#Prüfungen");
+            collection.setValue("Georg-Herwegh-Oberschule-Berlin#Pruefungen");
             logical.addMetadata(collection);
         } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
             log.error(e);
