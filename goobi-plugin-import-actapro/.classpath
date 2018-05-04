@@ -7,11 +7,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Goobi"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/jspf.core-1.0.0.jar"/>
-	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/lombok-1.12.4.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/commons-configuration-1.6.jar"/>
 	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/ugh-3.0.jar"/>
+	<classpathentry kind="lib" path="/Goobi/webapp/WEB-INF/lib/lombok.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
