@@ -20,7 +20,8 @@ import org.goobi.production.importer.Record;
 import org.goobi.production.plugin.interfaces.IImportPlugin;
 import org.goobi.production.plugin.interfaces.IPlugin;
 import org.goobi.production.properties.ImportProperty;
-import org.jdom2.*;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.Namespace;
@@ -29,6 +30,12 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
+import de.intranda.goobi.configuration.Mapping;
+import de.sub.goobi.forms.MassImportForm;
+import de.sub.goobi.helper.StorageProvider;
+import de.sub.goobi.helper.exceptions.ImportPluginException;
+import lombok.extern.log4j.Log4j;
+import net.xeoh.plugins.base.annotations.PluginImplementation;
 import ugh.dl.DigitalDocument;
 import ugh.dl.DocStruct;
 import ugh.dl.DocStructType;
@@ -44,12 +51,6 @@ import ugh.exceptions.TypeNotAllowedAsChildException;
 import ugh.exceptions.TypeNotAllowedForParentException;
 import ugh.exceptions.WriteException;
 import ugh.fileformats.mets.MetsMods;
-import de.intranda.goobi.configuration.Mapping;
-import de.sub.goobi.forms.MassImportForm;
-import de.sub.goobi.helper.NIOFileUtils;
-import de.sub.goobi.helper.exceptions.ImportPluginException;
-import lombok.extern.log4j.Log4j;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
 @Log4j
@@ -267,7 +268,8 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         // statische Metadaten
         try {
             Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
-            archiveName.setValue("Archiv der Bibliothek für Bildungsgeschichtliche Forschung (BBF) des Deutschen Instituts für Internationale Paedagogische Forschung (DIPF)");
+            archiveName.setValue(
+                    "Archiv der Bibliothek für Bildungsgeschichtliche Forschung (BBF) des Deutschen Instituts für Internationale Paedagogische Forschung (DIPF)");
             logical.addMetadata(archiveName);
 
             Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
@@ -407,7 +409,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     @Override
     public List<String> getAllFilenames() {
 
-        return NIOFileUtils.list(SOURCE_FOLDER);
+        return StorageProvider.getInstance().list(SOURCE_FOLDER);
     }
 
     @Override
