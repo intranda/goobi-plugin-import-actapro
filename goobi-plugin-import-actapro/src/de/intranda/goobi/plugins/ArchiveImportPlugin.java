@@ -64,8 +64,8 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     private static XPathExpression<Element> elementType = xFactory.compile("//h1:Block/h1:Field[@Type='Vz_AkTyp']", Filters.element(), null, h1);
     //    private static XPathExpression<String> stringType = xFactory.compile("//h1:Block/h1:Field[@Type='Vz_AkTyp']", Filters.fstring()(), null, h1);
 
-    private static XPathExpression<Attribute> attributeType = xFactory.compile("//h1:Block/h1:Field[@Type='St_Titel']/@value_plain", Filters
-            .attribute(), null, h1);
+    private static XPathExpression<Attribute> attributeType =
+            xFactory.compile("//h1:Block/h1:Field[@Type='St_Titel']/@value_plain", Filters.attribute(), null, h1);
 
     private static final String PLUGIN_NAME = "intranda_ArchiveDocumentImport";
 
@@ -87,6 +87,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
     //    private Record record;
 
     private List<Element> documentList;
+    private List<String> selectedCollections;
 
     public ArchiveImportPlugin() {
 
@@ -275,10 +276,13 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
             archiveAbbreviation.setValue("DIPF/BBF/Archiv");
             logical.addMetadata(archiveAbbreviation);
-
-            Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
-            collection.setValue("Georg-Herwegh-Oberschule-Berlin#Pruefungen");
-            logical.addMetadata(collection);
+            if (selectedCollections != null && !selectedCollections.isEmpty()) {
+                for (String selection : selectedCollections) {
+                    Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
+                    collection.setValue(selection);
+                    logical.addMetadata(collection);
+                }
+            }
         } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
             log.error(e);
         }
@@ -302,7 +306,7 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             if (form != null) {
                 form.addProcessToProgressBar();
             }
-
+            selectedCollections = record.getCollections();
             SAXBuilder builder = new SAXBuilder();
             try {
                 Document root = builder.build(new File(record.getData()));
