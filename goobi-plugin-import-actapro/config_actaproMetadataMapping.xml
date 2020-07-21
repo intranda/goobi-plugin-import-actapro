@@ -97,13 +97,18 @@
 <element xpath="./h1:Block/h1:Field[@Type='St_Darin']/@Value" metadata="Type" />
 
 <!-- Altsignaturen -->
-<element xpath="./h1:Block/h1:Field[@Type='Schlagworte_Gp']/h1:Field[@Type='Schlagworte_Schlagwort']/@Value" metadata="FormerShelfmark" />
+<element xpath="./h1:Block/h1:Field[@Type='Schlagworte_Gp']/h1:Field[@Type='Schlagworte_Schlagwort']/@Value" metadata="Keyword" />
 
 <!-- Schlagworte -->
-<element xpath="./h1:Block/h1:Field[@Type='Vz_Altsi_Gp']/h1:Field[@Type='Vz_Altsi']/@Value" metadata="Keyword" />
+<element xpath="./h1:Block/h1:Field[@Type='Vz_Altsi_Gp']/h1:Field[@Type='Vz_Altsi']/@Value" metadata="FormerShelfmark" />
 
 <!-- Ortsangaben -->
 <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="Location" />
+
+
+
+        <!-- Person -->
+        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Funktion2'])]/h1:Field[@Type='Beteiligte_Personen_Name']/@Value" metadata="PersonOriginal" />
 
 	</metadata>
 
@@ -206,10 +211,7 @@ Personen
             <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
         </element>
 
-        <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Funktion2'])]" metadata="OtherPerson">
-            <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
-            <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
-        </element>
+
 
 
 
