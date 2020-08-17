@@ -82,6 +82,8 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
     private Map<String, Map<String, String>> personMap;
 
+    private Map<String, Map<String, String>> concoranceMap;
+
     private String currentIdentifier;
 
     //    private Record record;
@@ -99,6 +101,8 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         metadataMap = Mapping.getInstance().getConfiguredMetadataMapping();
 
         personMap = Mapping.getInstance().getConfiguredPersonMapping();
+
+        concoranceMap = Mapping.getInstance().getConfiguredConcordanceTables();
     }
 
     @Override
@@ -198,7 +202,15 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
             for (Attribute attr : attrList) {
 
                 String value = attr.getValue().replaceAll("&#x0d;", "").replaceAll("&#x0a;", "");
-                MetadataType mdt = prefs.getMetadataTypeByName(metadataMap.get(xpath));
+                String metadataName = metadataMap.get(xpath);
+                if (concoranceMap.containsKey(metadataName)) {
+                    Map<String, String> valueMap = concoranceMap.get(metadataName);
+                    if (valueMap.containsKey(value)) {
+                        value = valueMap.get(value);
+                    }
+                }
+
+                MetadataType mdt = prefs.getMetadataTypeByName(metadataName);
                 Metadata md;
                 try {
                     md = new Metadata(mdt);

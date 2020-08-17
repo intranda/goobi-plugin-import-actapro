@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <config_plugin>
     <docstructs>
         <docstruct actapro="Allgemeines Schriftgut" ruleset="File" />
@@ -14,111 +15,112 @@
         <docstruct actapro="Liegenschaftsurkunde" ruleset="File" />
         <docstruct actapro="Urkunde (modern)" ruleset="File" />
         <docstruct actapro="Urkunde (vormodern)" ruleset="File" />
-<!-- <docstruct actapro="Zeitungsausschnitt" ruleset="" /> -->
-<!-- <docstruct actapro="Film" ruleset="" /> -->
-<!-- <docstruct actapro="Personenstandsregister" ruleset="" /> -->
-<!-- <docstruct actapro="Plakate" ruleset="" /> -->
-<!-- <docstruct actapro="Ton" ruleset="" /> -->
-<!-- <docstruct actapro="Mikroform" ruleset="" /> -->
-<!-- <docstruct actapro="Bibliotheksgut" ruleset="" />            -->
+        <!-- <docstruct actapro="Zeitungsausschnitt" ruleset="" /> -->
+        <!-- <docstruct actapro="Film" ruleset="" /> -->
+        <!-- <docstruct actapro="Personenstandsregister" ruleset="" /> -->
+        <!-- <docstruct actapro="Plakate" ruleset="" /> -->
+        <!-- <docstruct actapro="Ton" ruleset="" /> -->
+        <!-- <docstruct actapro="Mikroform" ruleset="" /> -->
+        <!-- <docstruct actapro="Bibliotheksgut" ruleset="" />            -->
 
 
     </docstructs>
     <metadata>
-   
-<!-- Titel -->
-<!--         <element xpath="./h1:Block/h1:Field[@Type='St_Titel']/@value_plain" metadata="TitleDocMain" /> -->
-		<element xpath="./h1:Block/h1:Field[@Type='St_Titel']/@value_plain" metadata="TitleDocMain" />
+
+        <!-- Titel -->
+        <!--         <element xpath="./h1:Block/h1:Field[@Type='St_Titel']/@value_plain" metadata="TitleDocMain" /> -->
+        <element xpath="./h1:Block/h1:Field[@Type='St_Titel']/@value_plain" metadata="TitleDocMain" />
         <element xpath="./h1:Block/h1:Field[@Type='Obj_Titel']/@Value" metadata="TitleDocMain" />
         <element xpath="./h1:Block/h1:Field[@Type='hs_Titel']/@value_plain" metadata="TitleDocMain" />
-		<element xpath="./h1:Block/h1:Field[@Type='Bi_Titel']/@Value" metadata="TitleDocMain" />
-		<element xpath="./h1:Block/h1:Field[@Type='Vz_Bez_Compound']/@Value" metadata="TitleDocMain" />
-<!--     Laufzeit -->
-        <element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@Value" metadata="PublicationRun" /> <!-- DateCreated -->
-		<element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@ValueMin" metadata="DateCreatedStart" />
-		<element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@ValueMax" metadata="DateCreatedEnd" />
-<!-- Bestellsignatur -->
+        <element xpath="./h1:Block/h1:Field[@Type='Bi_Titel']/@Value" metadata="TitleDocMain" />
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Bez_Compound']/@Value" metadata="TitleDocMain" />
+        <!--     Laufzeit -->
+        <element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@Value" metadata="PublicationRun" />
+        <!-- DateCreated -->
+        <element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@ValueMin" metadata="DateCreatedStart" />
+        <element xpath="./h1:Block/h1:Field[@Type='Laufzeit']/@ValueMax" metadata="DateCreatedEnd" />
+        <!-- Bestellsignatur -->
         <element xpath="./h1:Block/h1:Field[@Type='Vz_Bestellsignatur']/@Value" metadata="shelfmarksource" />
 
-<!-- Enthält -->
+        <!-- Enthält -->
         <element xpath="./h1:Block/h1:Field[@Type='St_Entha']/@value_plain" metadata="Contains" />
-		<element xpath="./h1:Block/h1:Field[@Type='Bi_Inhalt']/@Value" metadata="Content" />
-<!-- Umfang -->
+        <element xpath="./h1:Block/h1:Field[@Type='Bi_Inhalt']/@Value" metadata="Content" />
+        <!-- Umfang -->
         <element xpath="./h1:Block/h1:Field[@Type='Vz_Umfang']/@Value" metadata="FormatSourcePrint" />
 
-<!-- Archivkürzel, does not need a mapping, gets always added
+        <!-- Archivkürzel, does not need a mapping, gets always added
         <element xpath="./h1:Block/h1:Field[@Type='Wasserzeichen']/@Value" metadata="ArchiveName" />
 -->
 
-<!-- Benutzungsbeschrängungen -->
+        <!-- Benutzungsbeschrängungen -->
         <element xpath="./h1:Block/h1:Field[@Type='Sperr_Unbestellbar_Bis']/@Value" metadata="PublicReleaseYear" />
 
-<!-- Ortsangaben -->
-<!--
+        <!-- Ortsangaben -->
+        <!--
         <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp'][/h1:Field[@Type='Ortsangaben_Erlaeuterung'][@Value='Enstehungsort']]/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="PlaceOfPublication" /> 
 -->
-		<element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="PlaceOfPublication" />
-<!--
-        <element xpath="//h1:Block/h1:Field[@Type='Ortsangaben_Gp'][/h1:Field[@Type='Ortsangaben_Erlaeuterung'][@Value='Wirkungsort']]/h1:Field[@Type='Ortsangaben_Ort']/@Value"  metadata="PlaceOfPublication" /> 
+        <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="PlaceOfPublication" />
+        <!--
+        <element xpath="//h1:Block/h1:Field[@Type='Ortsangaben_Gp'][/h1:Field[@Type='Ortsangaben_Erlaeuterung'][@Value='Wirkungsort']]/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="PlaceOfPublication" /> 
 -->
-<!-- Bemerkung -->
+        <!-- Bemerkung -->
         <element xpath="./h1:Block/h1:Field[@Type='Vz_Bemer']/@Value" metadata="Footnote" />
 
 
 
-<!-- Material -->
+        <!-- Material -->
 
         <element xpath="./h1:Block/h1:Field[@Type='BI_Materialtyp_Gp']/h1:Field[@Type='Bi_Materialtyp_Format']/@Value" metadata="Material" />
         <element xpath="./h1:Block/h1:Field[@Type='Obj_Material']/@Value" metadata="Material" />
 
 
-<!-- Beschreibung -->
+        <!-- Beschreibung -->
 
         <element xpath="./h1:Block/h1:Field[@Type='Obj_Beschreibung']/@Value" metadata="Description" />
         <element xpath="./h1:Block/h1:Field[@Type='hs_Formalbeschreibung']/@value_plain" metadata="Description" />
 
-<!-- Größe -->
+        <!-- Größe -->
 
         <element xpath="./h1:Block/h1:Field[@Type='Obj_Groesse']/@Value" metadata="SizeSourcePrint" />
 
-<!-- Inhalt -->
+        <!-- Inhalt -->
         <element xpath="./h1:Block/h1:Field[@Type='hs_Inhalt']/@Value" metadata="Content" />
-		
-		
-<!-- Export ID (Findbuch-ID)  -->
-		<element xpath="./h1:Block/h1:Field[@Type='Export_id']/@Value" metadata="CatalogIDSource" />
-<!-- ACTApro uuid -->
-		<element xpath="./@DocKey" metadata="bbfArchivId" />
 
-<!-- Sprache -->
-<element xpath="./h1:Block/h1:Field[@Type='Vz_Sprache']/@Value" metadata="DocLanguage" />
 
-<!-- St_Darin -->
-<element xpath="./h1:Block/h1:Field[@Type='St_Darin']/@Value" metadata="Type" />
+        <!-- Export ID (Findbuch-ID)  -->
+        <element xpath="./h1:Block/h1:Field[@Type='Export_id']/@Value" metadata="CatalogIDSource" />
+        <!-- ACTApro uuid -->
+        <element xpath="./@DocKey" metadata="bbfArchivId" />
 
-<!-- Altsignaturen -->
-<element xpath="./h1:Block/h1:Field[@Type='Schlagworte_Gp']/h1:Field[@Type='Schlagworte_Schlagwort']/@Value" metadata="Keyword" />
+        <!-- Sprache -->
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Sprache']/@Value" metadata="DocLanguage" />
 
-<!-- Schlagworte -->
-<element xpath="./h1:Block/h1:Field[@Type='Vz_Altsi_Gp']/h1:Field[@Type='Vz_Altsi']/@Value" metadata="FormerShelfmark" />
+        <!-- St_Darin -->
+        <element xpath="./h1:Block/h1:Field[@Type='St_Darin']/@Value" metadata="IncludeNote" />
 
-<!-- Ortsangaben -->
-<element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="Location" />
+        <!-- Altsignaturen -->
+        <element xpath="./h1:Block/h1:Field[@Type='Schlagworte_Gp']/h1:Field[@Type='Schlagworte_Schlagwort']/@Value" metadata="Keyword" />
+
+        <!-- Schlagworte -->
+        <element xpath="./h1:Block/h1:Field[@Type='Vz_Altsi_Gp']/h1:Field[@Type='Vz_Altsi']/@Value" metadata="FormerShelfmark" />
+
+        <!-- Ortsangaben -->
+        <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="Location" />
 
 
 
         <!-- Person -->
         <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Funktion2'])]/h1:Field[@Type='Beteiligte_Personen_Name']/@Value" metadata="PersonOriginal" />
 
-	</metadata>
+    </metadata>
 
-<!--
+    <!--
 Bst_Signatur
 <h1:Field Type="Bst_Signatur" Value="Best.TEST"/>
 Bst_Name
 <h1:Field Type="Bst_Name" Value="Testbestand"/> 
 -->
-<!--
+    <!--
 Vz_OwnSign
  <h1:Field Type="Vz_OwnSign" Value="120"/>
 
@@ -167,7 +169,7 @@ Personen
             <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
         </element>
 
-<!-- 
+        <!-- 
         <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Vorname'])][h1:Field[@Type='Beteiligte_Personen_Funktion2'][@Value='Schreiber']]" metadata="WriterCorporate">
             <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
         </element>
@@ -210,11 +212,37 @@ Personen
             <firstname xpath="./h1:Field[@Type='Beteiligte_Personen_Vorname']/@Value" />
             <lastname xpath="./h1:Field[@Type='Beteiligte_Personen_Name']/@Value" />
         </element>
-
-
-
-
-
     </person>
 
+    <concordance metadata="DocLanguage">
+        <value for="arabisch" val="ara"/>
+        <value for="baskisch" val="baq"/>
+        <value for="bulgarisch" val="bul"/>
+        <value for="chinesisch" val="chi"/>
+        <value for="dänisch" val="dan"/>
+        <value for="deutsch" val="deu"/>
+        <value for="englisch" val="eng"/>
+        <value for="finnisch" val="fin"/>
+        <value for="fränzösich" val="fra"/>
+        <value for="französisch" val="fra"/>
+        <value for="griechisch" val="ell"/>
+        <value for="hebräisch" val="heb"/>
+        <value for="italienisch" val="ita"/>
+        <value for="japanisch" val="jpn"/>
+        <value for="katalanisch" val="cat"/>
+        <value for="lateinisch" val="lat"/>
+        <value for="niederländisch" val="dut"/>
+        <value for="norwegisch" val="nor"/>
+        <value for="polnisch" val="pol"/>
+        <value for="portugiesisch" val="por"/>
+        <value for="rumänisch" val="ron"/>
+        <value for="russisch" val="rus"/>
+        <value for="schwedisch" val="swe"/>
+        <value for="sorbisch" val="wen"/>
+        <value for="spanisch" val="spa"/>
+        <value for="tschechisch" val="ces"/>
+        <value for="ukrainisch" val="ukr"/>
+        <value for="ungarisch" val="hun"/>
+        <value for="altgriechisch" val="grc"/>
+    </concordance>
 </config_plugin>

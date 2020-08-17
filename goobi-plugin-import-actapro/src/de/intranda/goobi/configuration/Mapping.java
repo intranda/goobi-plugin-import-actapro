@@ -20,12 +20,11 @@ public class Mapping {
     private static Mapping instance;
     private static XMLConfiguration config;
 
-    
-    public static final String FIRSTNAME ="firstname";
-    public static final String LASTNAME ="lastname";
-    public static final String METADATA ="metadata";
-    public static final String IDENTIFIER ="identifier";
-    
+    public static final String FIRSTNAME = "firstname";
+    public static final String LASTNAME = "lastname";
+    public static final String METADATA = "metadata";
+    public static final String IDENTIFIER = "identifier";
+
     public static synchronized Mapping getInstance() {
         if (instance == null) {
             instance = new Mapping();
@@ -95,6 +94,23 @@ public class Mapping {
             allPersons.put(xpath, currentPerson);
         }
         return allPersons;
+    }
+
+    public Map<String, Map<String, String>> getConfiguredConcordanceTables() {
+        Map<String, Map<String, String>> allTables = new HashMap<>();
+
+        List<HierarchicalConfiguration> concordanceElementList = config.configurationsAt("concordance");
+        for (HierarchicalConfiguration concordanceElement : concordanceElementList) {
+            String metadataName = concordanceElement.getString("@metadata");
+            List<HierarchicalConfiguration> valueList = concordanceElement.configurationsAt("value");
+            Map<String, String> values = new HashMap<>();
+            for (HierarchicalConfiguration val : valueList) {
+                values.put(val.getString("@for"), val.getString("@val"));
+            }
+            allTables.put(metadataName, values);
+        }
+
+        return allTables;
     }
 
 }
