@@ -107,7 +107,8 @@
         <!-- Ortsangaben -->
         <element xpath="./h1:Block/h1:Field[@Type='Ortsangaben_Gp']/h1:Field[@Type='Ortsangaben_Ort']/@Value" metadata="Location" />
 
-
+        <element xpath="./h1:Block/h1:Field[@Type='Ar_Name']/@Value" metadata="ArchiveName" />
+        <element xpath="./h1:Block/h1:Field[@Type='Ar_Kürzel']/@Value" metadata="ArchiveAbbreviation" />
 
         <!-- Person -->
         <element xpath="./h1:Block/h1:Field[@Type='Beteiligte_Personen_Gp'][not(h1:Field[@Type='Beteiligte_Personen_Funktion2'])]/h1:Field[@Type='Beteiligte_Personen_Name']/@Value" metadata="PersonOriginal" />
@@ -130,7 +131,7 @@ Export_id
 <h1:Field Type="Export_id" Value="Vz_9929832A-E8BF-40C9-8239-F2A267E85E71"/>
 
  -->
-Personen
+
     <person>
         <element xpath="./h1:Block/h1:Field[@Type='Pa_Nachname']" metadata="AssociatedName">
             <firstname xpath="../h1:Field[@Type='Pa_Vorname']/@Value" />

@@ -205,21 +205,26 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
                 String metadataName = metadataMap.get(xpath);
                 if (concoranceMap.containsKey(metadataName)) {
                     Map<String, String> valueMap = concoranceMap.get(metadataName);
-                    if (valueMap.containsKey(value)) {
-                        value = valueMap.get(value);
+                    String[] splittedValues = value.split(";");
+                    for (String splittedValue : splittedValues) {
+                        for (String val2 : splittedValue.split(",")) {
+                            val2 = val2.trim();
+                            if (valueMap.containsKey(val2)) {
+                                val2 = valueMap.get(val2);
+                            }
+                            MetadataType mdt = prefs.getMetadataTypeByName(metadataName);
+                            Metadata md;
+                            try {
+                                md = new Metadata(mdt);
+                                md.setValue(val2);
+                                logical.addMetadata(md);
+                                log.info("Importing " + mdt.getName() + " with value " + val2);
+                            } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
+                                log.error("Cannot add metadata " + mdt.getName() + " to docstruct " + logical.getType().getName());
+                            }
+
+                        }
                     }
-                }
-
-                MetadataType mdt = prefs.getMetadataTypeByName(metadataName);
-                Metadata md;
-                try {
-                    md = new Metadata(mdt);
-
-                    md.setValue(value);
-                    logical.addMetadata(md);
-                    log.info("Importing " + mdt.getName() + " with value " + value);
-                } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
-                    log.error("Cannot add metadata " + mdt.getName() + " to docstruct " + logical.getType().getName());
                 }
             }
         }
@@ -280,14 +285,14 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
         }
         // statische Metadaten
         try {
-            Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
-            archiveName.setValue(
-                    "Archiv der Bibliothek für Bildungsgeschichtliche Forschung (BBF) des Deutschen Instituts für Internationale Paedagogische Forschung (DIPF)");
-            logical.addMetadata(archiveName);
-
-            Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
-            archiveAbbreviation.setValue("DIPF/BBF/Archiv");
-            logical.addMetadata(archiveAbbreviation);
+            //            Metadata archiveName = new Metadata(prefs.getMetadataTypeByName("ArchiveName"));
+            //            archiveName.setValue(
+            //                    "Archiv der Bibliothek für Bildungsgeschichtliche Forschung (BBF) des Deutschen Instituts für Internationale Paedagogische Forschung (DIPF)");
+            //            logical.addMetadata(archiveName);
+            //
+            //            Metadata archiveAbbreviation = new Metadata(prefs.getMetadataTypeByName("ArchiveAbbreviation"));
+            //            archiveAbbreviation.setValue("DIPF/BBF/Archiv");
+            //            logical.addMetadata(archiveAbbreviation);
             if (selectedCollections != null && !selectedCollections.isEmpty()) {
                 for (String selection : selectedCollections) {
                     Metadata collection = new Metadata(prefs.getMetadataTypeByName("singleDigCollection"));
