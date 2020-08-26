@@ -225,6 +225,16 @@ public class ArchiveImportPlugin implements IImportPlugin, IPlugin {
 
                         }
                     }
+                } else {
+                    MetadataType mdt = prefs.getMetadataTypeByName(metadataName);
+                    Metadata md;
+                    try {
+                        md = new Metadata(mdt);
+                        md.setValue(value);
+                        logical.addMetadata(md);
+                    } catch (MetadataTypeNotAllowedException | DocStructHasNoTypeException e) {
+                        log.error("Cannot add metadata " + metadataName + " to docstruct " + logical.getType().getName());
+                    }
                 }
             }
         }
